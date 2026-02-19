@@ -26,7 +26,18 @@
 .cat-card[data-category="Item"] .cat-icon { color: #00d2ff; }
 .cat-card[data-category="Magic"] .cat-icon { color: #9d50bb; }
 
-/* Dark/Light Transition */
-body, .page, .rpg-header, .unit-card, .cat-card, .rpg-box, .modal-content {
-    transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
+/* Rarity Badge follows Category Accent */
+.unit-rarity {
+    background: var(--accent-clr) !important;
+    color: white !important;
+}
+
+/* Lore Box follows Category Accent */
+.rpg-box {
+    border-color: var(--accent-clr) !important;
+    box-shadow: 0 0 15px rgba(var(--accent-clr), 0.3) !important;
+}
+
+#detail-story {
+    color: var(--accent-clr) !important;
 }

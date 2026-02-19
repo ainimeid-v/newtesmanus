@@ -51,8 +51,8 @@ body {
     overflow-y: auto;
     display: none;
     opacity: 0;
-    transform: scale(0.98);
-    transition: opacity 0.4s ease, transform 0.4s ease;
+    transform: scale(1); /* REVISI: NO SCALE ANIMATION */
+    transition: opacity 0.4s ease;
     padding-top: 60px;
     padding-bottom: 60px;
     z-index: 1;
@@ -61,7 +61,6 @@ body {
 .page.active {
     display: block;
     opacity: 1;
-    transform: scale(1);
     z-index: 10;
 }
 
@@ -117,12 +116,11 @@ body {
 }
 
 .hero-content {
-    animation: fadeInDown 1s ease-out;
     margin-bottom: 30px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    transform: translateY(-100px); /* REVISI: NAIKAN SEDIKIT (was -80px) */
+    transform: translateY(-100px);
 }
 
 .rpg-title {
@@ -160,14 +158,6 @@ body {
     max-width: 240px;
 }
 
-.patch-ver-text {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.6rem;
-    color: var(--text-muted);
-    margin-top: 5px;
-    letter-spacing: 1px;
-}
-
 .rpg-btn {
     padding: 15px 30px;
     font-family: 'Cinzel', serif;
@@ -197,6 +187,32 @@ body {
     width: 100%;
 }
 
+/* MINIGAME BUTTON */
+.minigame-btn {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    background: var(--secondary-bg);
+    border: 2px solid var(--accent-clr);
+    color: var(--accent-clr);
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(var(--accent-clr), 0.3);
+    transition: var(--transition);
+    z-index: 100;
+}
+
+.minigame-btn:hover {
+    background: var(--accent-clr);
+    color: white;
+    box-shadow: 0 0 25px var(--accent-clr);
+    transform: scale(1.05);
+}
+
 /* CATEGORY GRID P1 */
 .category-grid {
     display: grid;
@@ -209,7 +225,7 @@ body {
     width: 90%;
     max-width: 360px;
     background: var(--secondary-bg);
-    padding: 45px 20px 25px; /* More top padding for X button */
+    padding: 45px 20px 25px;
     border-radius: 20px;
     border: 2px solid var(--accent-clr);
     box-shadow: 0 0 60px rgba(0,0,0,0.9);
@@ -240,8 +256,6 @@ body {
     transition: var(--transition);
     box-shadow: 0 0 15px rgba(0,0,0,0.5);
 }
-
-.cancel-btn-new:hover { background: var(--accent-clr); color: white; transform: rotate(90deg); }
 
 .cat-card {
     background: var(--card-bg);
@@ -290,8 +304,6 @@ body {
     transition: var(--transition);
 }
 
-.nav-btn:hover { background: var(--accent-clr); color: white; }
-
 .nav-btn-highlight {
     background: rgba(var(--accent-clr), 0.1);
     border: 1px solid var(--accent-clr);
@@ -305,8 +317,6 @@ body {
     cursor: pointer;
     transition: var(--transition);
 }
-
-.nav-btn-highlight:hover { background: var(--accent-clr); color: white; }
 
 .search-filter-container { display: flex; gap: 10px; }
 .rpg-search-box {
@@ -331,8 +341,6 @@ body {
     width: 40px; border-radius: 10px; cursor: pointer;
     transition: var(--transition);
 }
-
-.rpg-filter-btn:hover { background: var(--accent-clr); color: white; }
 
 .filter-panel {
     background: rgba(0,0,0,0.3);
@@ -389,22 +397,16 @@ body {
 .unit-info { padding: 6px; text-align: center; }
 .unit-info .name { font-size: 0.6rem; font-weight: 700; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-/* REVISI PAGE 2: RARITY COLORS & FONT */
+/* REVISI: RARITY COLORS BASED ON CATEGORY */
 .unit-rarity {
     position: absolute; top: 5px; right: 5px;
-    color: white; /* REVISI: FONT PUTIH */
-    padding: 4px 8px; /* REVISI: UKURAN LEBIH BESAR */
+    color: white;
+    padding: 4px 8px;
     border-radius: 4px; font-size: 0.7rem; font-weight: 900;
     backdrop-filter: blur(4px);
     box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    background: var(--accent-clr); /* REVISI: ALWAYS USE ACCENT COLOR */
 }
-
-/* REVISI PAGE 2: WARNA KOTAK SESUAI KATEGORI */
-.unit-rarity[data-rarity="S"] { background: #ff3e3e; }
-.unit-rarity[data-rarity="A"] { background: #ffcc00; }
-.unit-rarity[data-rarity="B"] { background: #00d2ff; }
-.unit-rarity[data-rarity="C"] { background: #00ff88; }
-.unit-rarity[data-rarity="D"] { background: #888888; }
 
 /* PAGE 3: DETAIL */
 .detail-nav-static {
@@ -415,10 +417,9 @@ body {
     z-index: 50;
     padding: 15px 0;
     background: transparent;
-    transition: transform 0.3s ease; /* For auto-hide animation */
+    transition: transform 0.3s ease;
 }
 
-/* REVISI PAGE 3: AUTO HIDE NAV */
 .detail-nav-static.nav-hidden {
     transform: translateY(-100%);
 }
@@ -432,8 +433,6 @@ body {
     transition: var(--transition);
     backdrop-filter: blur(8px);
 }
-
-.nav-btn-circle:hover { background: var(--accent-clr); color: white; transform: scale(1.1); }
 
 .detail-layout { display: flex; flex-direction: column; gap: 20px; }
 .unit-visual { width: 100%; max-width: 260px; margin: 0 auto; }
@@ -450,20 +449,19 @@ body {
     font-family: 'Orbitron', sans-serif; font-size: 1.3rem; font-weight: 900;
 }
 
-.unit-bio { text-align: center; transform: translateY(-15px); /* REVISI: TURUNIN SEDIKIT (was -25px) */ }
+.unit-bio { text-align: center; transform: translateY(-15px); }
 .unit-bio h1 { font-family: 'Cinzel', serif; font-size: 1.8rem; color: var(--accent-clr); margin-bottom: 5px; }
 .unit-bio h3 { font-style: italic; color: var(--text-muted); font-size: 0.8rem; margin-bottom: 15px; }
 
 .detail-tags { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }
 .tag { background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 12px; font-size: 0.65rem; border: 1px solid var(--accent-clr); color: var(--accent-clr); font-weight: 700; }
 
-/* REVISI PAGE 3: LORE BOX & NEON EFFECT */
 .rpg-box {
-    background: rgba(255,255,255,0.05); /* REVISI: PANEL LEBIH TERANG */
-    border: 1px solid var(--accent-clr); /* REVISI: WARNA SAMA DENGAN TAGS */
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--accent-clr);
     border-radius: 12px; padding: 20px 15px 15px; text-align: left; position: relative;
     height: auto; min-height: 80px;
-    box-shadow: 0 0 15px rgba(var(--accent-clr), 0.3); /* REVISI: EFEK NEON */
+    box-shadow: 0 0 15px rgba(var(--accent-clr), 0.3);
 }
 
 .box-header {
@@ -474,11 +472,10 @@ body {
 }
 
 #detail-story {
-    color: var(--accent-clr); /* REVISI: WARNA SAMA DENGAN TAGS */
+    color: var(--accent-clr);
 }
 
-/* GALLERY CAROUSEL */
-.unit-gallery { margin-top: 20px; padding-bottom: 20px; } /* REVISI: JARAK DARI PANEL LORE */
+.unit-gallery { margin-top: 20px; padding-bottom: 20px; }
 .gallery-title { font-family: 'Orbitron', sans-serif; font-size: 0.7rem; color: var(--accent-clr); text-align: center; margin-bottom: 15px; letter-spacing: 2px; }
 .carousel { width: 100%; overflow: hidden; padding: 10px 0; }
 .carousel-track { display: flex; align-items: center; justify-content: center; gap: 15px; min-height: 110px; }
@@ -487,7 +484,6 @@ body {
     border-radius: 8px; opacity: 0.5; cursor: pointer; 
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease, border 0.4s ease;
     border: 1px solid transparent;
-    will-change: transform, opacity;
 }
 
 .extra-img.active {
@@ -512,48 +508,55 @@ body {
 
 .modal-content h3 { font-family: 'Cinzel', serif; color: var(--accent-clr); margin-bottom: 15px; font-size: 1.1rem; }
 
-.mini-cat-list { display: grid; grid-template-columns: 1fr; gap: 10px; margin: 15px 0; }
-.m-cat { background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; cursor: pointer; font-size: 0.75rem; font-family: 'Orbitron', sans-serif; transition: var(--transition); border: 1px solid var(--border-clr); }
-.m-cat:hover { background: var(--accent-clr); color: white; border-color: var(--accent-clr); transform: translateX(5px); }
-
-.patch-scroll-area {
-    max-height: 250px; overflow-y: auto; text-align: left;
-    padding: 15px; background: rgba(0,0,0,0.3); border-radius: 10px;
-    margin: 15px 0; font-size: 0.8rem; line-height: 1.6; border: 1px solid var(--border-clr);
+.close-btn-top {
+    position: absolute; top: 10px; right: 15px;
+    background: transparent; border: none; color: var(--accent-clr);
+    font-size: 1.5rem; cursor: pointer;
 }
 
-/* VIEWER */
-.viewer-overlay {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.95); z-index: 3000;
-    display: flex; align-items: center; justify-content: center; padding: 20px;
+/* MINIGAME STYLES */
+.minigame-content { max-width: 400px; }
+.difficulty-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+.diff-btn {
+    background: rgba(255,255,255,0.05); border: 1px solid var(--accent-clr);
+    color: var(--accent-clr); padding: 10px; border-radius: 8px;
+    font-family: 'Orbitron', sans-serif; font-size: 0.7rem; cursor: pointer;
+    transition: var(--transition);
 }
+.diff-btn:hover { background: var(--accent-clr); color: white; }
 
-.viewer-overlay img { max-width: 100%; max-height: 80vh; border-radius: 8px; border: 2px solid var(--accent-clr); }
-.close-viewer { position: absolute; top: 20px; right: 25px; font-size: 35px; color: white; cursor: pointer; }
+.game-stats { display: flex; justify-content: space-between; margin-bottom: 15px; font-family: 'Orbitron', sans-serif; font-size: 0.8rem; color: var(--accent-clr); }
+.memory-grid { display: grid; gap: 8px; margin: 0 auto; }
+.memory-card {
+    aspect-ratio: 1; background: var(--accent-clr); border-radius: 4px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; color: white; transition: transform 0.3s;
+    transform-style: preserve-3d;
+}
+.memory-card.flipped { transform: rotateY(180deg); background: var(--secondary-bg); border: 1px solid var(--accent-clr); }
+.memory-card.matched { opacity: 0.5; cursor: default; }
 
-/* LOADING */
+/* REVISI: LOADING SCREEN 0-100% */
 .loading-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: #000; z-index: 9999;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
 }
 
-.loader-circle {
-    width: 50px; height: 50px; border: 3px solid transparent;
-    border-top: 3px solid var(--accent-clr); border-radius: 50%;
-    animation: spin 1s linear infinite; margin-bottom: 15px;
+.rpg-loader-new { width: 80%; max-width: 300px; text-align: center; }
+.loader-text { font-family: 'Orbitron', sans-serif; font-size: 0.7rem; color: var(--accent-clr); margin-bottom: 15px; letter-spacing: 2px; }
+.progress-container {
+    width: 100%; height: 4px; background: rgba(255,255,255,0.1);
+    border-radius: 2px; overflow: hidden; margin-bottom: 10px;
 }
-
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* REVISI PAGE 1: LOADING ANIMATION (NO DOWNWARD FIRST) */
-@keyframes fadeInDown { 
-    from { opacity: 0; transform: translateY(0); } /* REVISI: START FROM 0, NOT -20px */
-    to { opacity: 1; transform: translateY(0); } 
+.progress-bar {
+    width: 0%; height: 100%; background: linear-gradient(90deg, #ff3e3e, #00ff88, #ffcc00, #00d2ff, #9d50bb);
+    background-size: 400% 400%; animation: gradientMove 2s linear infinite;
+    transition: width 0.1s;
 }
+.loader-pct { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; font-weight: 700; color: white; }
 
-@keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+@keyframes gradientMove { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
 
 /* Desktop */
 @media (min-width: 768px) {

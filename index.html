@@ -73,6 +73,11 @@
                     <span class="cat-name">MAGIC</span>
                 </div>
             </div>
+
+            <!-- MINIGAME BUTTON -->
+            <button id="minigame-trigger" class="minigame-btn">
+                <i class="fas fa-gamepad"></i> MINI GAME
+            </button>
         </div>
     </section>
 
@@ -157,8 +162,6 @@
                     </div>
                 </div>
 
-                </div> <!-- End unit-bio -->
-
                 <div class="unit-gallery">
                     <h4 class="gallery-title">VISUAL ARCHIVE</h4>
                     <div class="carousel">
@@ -194,15 +197,45 @@
         </div>
     </div>
 
+    <!-- MINIGAME MODAL -->
+    <div id="minigame-modal" class="rpg-modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content minigame-content">
+            <button id="close-minigame" class="close-btn-top">&times;</button>
+            <h3>MEMORY REALM</h3>
+            
+            <div id="minigame-setup">
+                <p>Select Difficulty:</p>
+                <div class="difficulty-btns">
+                    <button class="diff-btn" data-diff="easy">EASY</button>
+                    <button class="diff-btn" data-diff="medium">MEDIUM</button>
+                    <button class="diff-btn" data-diff="hard">HARD</button>
+                    <button class="diff-btn" data-diff="insane">INSANE</button>
+                </div>
+            </div>
+
+            <div id="minigame-play" class="hidden">
+                <div class="game-stats">
+                    <span>TIME: <span id="game-timer">0</span>s</span>
+                    <span>SCORE: <span id="game-score">0</span></span>
+                </div>
+                <div id="memory-grid" class="memory-grid"></div>
+            </div>
+        </div>
+    </div>
+
     <div id="image-viewer" class="viewer-overlay hidden">
         <span class="close-viewer">&times;</span>
         <img id="viewer-img" src="">
     </div>
 
     <div id="loading-screen" class="loading-overlay">
-        <div class="rpg-loader">
-            <div class="loader-circle"></div>
-            <p>SYNCING REALM DATA...</p>
+        <div class="rpg-loader-new">
+            <div class="loader-text">INITIALIZING REALM...</div>
+            <div class="progress-container">
+                <div id="loading-progress" class="progress-bar"></div>
+            </div>
+            <div id="loading-percentage" class="loader-pct">0%</div>
         </div>
     </div>
 
