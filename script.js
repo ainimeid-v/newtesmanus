@@ -1,12 +1,13 @@
 /* CONSOLIDATED RPG SCRIPT SYSTEM */
 
 const CONFIG = {
+    // Replace with your CSV URL
     csvUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTfX6o_W1y8q6v_r1R_S1p_S1p_S1p_S1p_S1p_S1p_S1p_S1p_S1p_S1p_S1p/pub?output=csv',
     categories: ['Character', 'Monster', 'Pet', 'Item', 'Magic']
 };
 
 let rawData = [];
-let currentCat = localStorage.getItem('currentCat') || 'Character';
+let currentCat = 'Character';
 let filters = { search: '', rarity: '', tags: [] };
 
 // --- UI UTILS ---
@@ -28,7 +29,6 @@ const UI = {
         });
         const target = document.getElementById(pageId);
         target.classList.add('active');
-        localStorage.setItem('currentPage', pageId);
         window.scrollTo(0, 0);
     },
 
@@ -50,6 +50,24 @@ const UI = {
         const next = current === 'dark' ? 'light' : 'dark';
         document.documentElement.setAttribute('data-theme', next);
         this.themeToggle.innerHTML = next === 'dark' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+    },
+
+    handleCarousel(el) {
+        const track = document.getElementById('carousel-track');
+        const imgs = Array.from(track.querySelectorAll('.extra-img'));
+        
+        if (el.classList.contains('active')) {
+            this.viewerImg.src = el.src;
+            this.viewer.classList.remove('hidden');
+        } else {
+            const index = imgs.indexOf(el);
+            if (index === 0) track.insertBefore(imgs[imgs.length - 1], imgs[0]);
+            else if (index === 2) track.appendChild(imgs[0]);
+            
+            const newImgs = Array.from(track.querySelectorAll('.extra-img'));
+            newImgs.forEach(img => img.classList.remove('active'));
+            newImgs[1].classList.add('active');
+        }
     }
 };
 
@@ -68,6 +86,17 @@ async function loadRealmData() {
     }
 }
 
+function parseCSV(csv) {
+    const lines = csv.split('\n');
+    const headers = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/ /g, '_'));
+    return lines.slice(1).map(line => {
+        const values = line.split(',').map(v => v.trim());
+        const obj = {};
+        headers.forEach((header, i) => { obj[header] = values[i]; });
+        return obj;
+    });
+}
+
 function getMockArchive() {
     const data = [];
     const images = [
@@ -76,11 +105,11 @@ function getMockArchive() {
         'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&h=600&fit=crop'
     ];
     CONFIG.categories.forEach(cat => {
-        for (let i = 1; i <= 6; i++) {
+        for (let i = 1; i <= 3; i++) {
             data.push({
                 category: cat, name: `${cat} Legend ${i}`, nickname: `Title of ${cat}`,
                 rarity: ['S', 'A', 'B', 'C', 'D'][Math.floor(Math.random() * 5)],
-                main_image_url: images[i % 3],
+                main_image_url: images[i-1],
                 extra_image_1: 'https://picsum.photos/400/400?random=1',
                 extra_image_2: 'https://picsum.photos/400/400?random=2',
                 extra_image_3: 'https://picsum.photos/400/400?random=3',
@@ -92,52 +121,44 @@ function getMockArchive() {
     return data;
 }
 
-// --- LOADING ANIMATION ---
-function startLoading() {
-    let progress = 0;
-    const bar = document.getElementById('loading-progress');
-    const text = document.getElementById('loading-percentage');
-    
-    const interval = setInterval(() => {
-        progress += Math.floor(Math.random() * 10) + 2;
-        if (progress >= 100) {
-            progress = 100;
-            clearInterval(interval);
-            setTimeout(() => {
-                UI.loading.style.opacity = '0';
-                setTimeout(() => UI.loading.classList.add('hidden'), 500);
-            }, 500);
-        }
-        bar.style.width = progress + '%';
-        text.innerText = progress + '%';
-    }, 100);
-}
-
 // --- MAIN LOGIC ---
 async function init() {
-    startLoading();
     await loadRealmData();
-
-    // Restore Page State
-    const savedPage = localStorage.getItem('currentPage') || 'page-1';
-    UI.showPage(savedPage);
-    if (savedPage === 'page-2') {
-        selectRealm(currentCat, false);
-    }
+    UI.loading.style.opacity = '0';
+    setTimeout(() => UI.loading.classList.add('hidden'), 500);
 
     // Page 1
     document.getElementById('start-btn').onclick = () => {
         document.getElementById('start-btn').classList.add('hidden');
         document.getElementById('patch-btn').classList.add('hidden');
-        document.querySelector('.patch-ver-text').classList.add('hidden');
+        const verText = document.querySelector('.patch-ver-text');
+        if (verText) verText.classList.add('hidden');
         document.getElementById('category-grid').classList.remove('hidden');
     };
 
-    document.getElementById('cancel-cat-btn').onclick = () => {
-        document.getElementById('start-btn').classList.remove('hidden');
-        document.getElementById('patch-btn').classList.remove('hidden');
-        document.querySelector('.patch-ver-text').classList.remove('hidden');
-        document.getElementById('category-grid').classList.add('hidden');
+    // CANCEL CAT BTN
+    const cancelBtn = document.getElementById('cancel-cat-btn');
+    if (cancelBtn) {
+        cancelBtn.onclick = () => {
+            document.getElementById('start-btn').classList.remove('hidden');
+            document.getElementById('patch-btn').classList.remove('hidden');
+            const verText = document.querySelector('.patch-ver-text');
+            if (verText) verText.classList.remove('hidden');
+            document.getElementById('category-grid').classList.add('hidden');
+        };
+    }
+
+    document.getElementById('patch-btn').onclick = () => {
+        document.getElementById('patch-text').innerHTML = `
+            <strong>UPDATE v1.0.8</strong><br><br>
+            - Improved UI transitions and animations.<br>
+            - Fixed sticky navigation for Archive and Detail.<br>
+            - Optimized slider stability (no more vibration).<br>
+            - Theme-consistent button colors across all modals.<br>
+            - Dynamic Lore box auto-adjustment.<br><br>
+            <em>System fully optimized.</em>
+        `;
+        UI.patchModal.classList.remove('hidden');
     };
 
     document.querySelectorAll('.cat-card').forEach(card => {
@@ -185,34 +206,24 @@ async function init() {
     // Close Modals
     document.getElementById('close-modal').onclick = () => UI.modal.classList.add('hidden');
     document.getElementById('close-patch').onclick = () => UI.patchModal.classList.add('hidden');
+    document.querySelector('.close-viewer').onclick = () => UI.viewer.classList.add('hidden');
     UI.themeToggle.onclick = () => UI.toggleTheme();
     
     setInterval(() => UI.updateClock(), 1000);
     UI.updateClock();
-
-    // Auto Hide Nav Page 3
-    const page3 = document.getElementById('page-3');
-    const nav3 = page3.querySelector('.detail-nav-static');
-    let lastScrollTop = 0;
-    page3.addEventListener('scroll', () => {
-        let st = page3.scrollTop;
-        if (st > lastScrollTop && st > 50) nav3.classList.add('nav-hidden');
-        else nav3.classList.remove('nav-hidden');
-        lastScrollTop = st <= 0 ? 0 : st;
-    });
-
-    initMinigame();
 }
 
-function selectRealm(cat, shouldShowPage = true) {
+function selectRealm(cat) {
     currentCat = cat;
-    localStorage.setItem('currentCat', cat);
     document.body.className = `theme-${cat.toLowerCase()}`;
     document.getElementById('category-title').innerText = cat.toUpperCase();
     UI.modal.classList.add('hidden');
+    filters = { search: '', rarity: '', tags: [] };
+    document.getElementById('unit-search').value = '';
+    document.querySelectorAll('.r-chip').forEach(c => c.classList.remove('active'));
     populateTags();
     renderArchive();
-    if (shouldShowPage) UI.showPage('page-2');
+    UI.showPage('page-2');
 }
 
 function populateTags() {
@@ -269,111 +280,24 @@ function showLegendDetail(name) {
     document.getElementById('detail-nickname').innerText = unit.nickname ? `"${unit.nickname}"` : "";
     document.getElementById('detail-story').innerText = unit.story;
     const tagContainer = document.getElementById('detail-tags-container');
-    tagContainer.innerHTML = unit.tags ? unit.tags.split(',').map(t => `<span class="tag">${t.trim()}</span>`).join('') : '';
+    tagContainer.innerHTML = unit.tags ? unit.tags.split(',').map(t => `<span class="tag" onclick="jumpToTag('${t.trim()}')">${t.trim()}</span>`).join('') : '';
+    const track = document.getElementById('carousel-track');
+    const images = [unit.extra_image_1, unit.extra_image_2, unit.extra_image_3].filter(img => img);
+    track.innerHTML = images.map((img, i) => `
+        <img class="extra-img ${i === 1 ? 'active' : ''}" src="${img}" onclick="UI.handleCarousel(this)">
+    `).join('');
     UI.showPage('page-3');
 }
 
-// --- MINIGAME LOGIC ---
-function initMinigame() {
-    const modal = document.getElementById('minigame-modal');
-    const trigger = document.getElementById('minigame-trigger');
-    const close = document.getElementById('close-minigame');
-    const setup = document.getElementById('minigame-setup');
-    const play = document.getElementById('minigame-play');
-    const grid = document.getElementById('memory-grid');
-    
-    let cards = [];
-    let flipped = [];
-    let matched = 0;
-    let score = 0;
-    let timer = 0;
-    let timerInterval;
-
-    trigger.onclick = () => modal.classList.remove('hidden');
-    close.onclick = () => {
-        modal.classList.add('hidden');
-        resetGame();
-    };
-
-    document.querySelectorAll('.diff-btn').forEach(btn => {
-        btn.onclick = () => startGame(btn.dataset.diff);
+function jumpToTag(tag) {
+    UI.showPage('page-2');
+    document.getElementById('filter-panel').classList.remove('hidden');
+    filters.tags = [tag];
+    renderArchive();
+    document.querySelectorAll('.t-chip').forEach(c => {
+        if (c.innerText === tag) c.classList.add('active');
+        else c.classList.remove('active');
     });
-
-    function startGame(diff) {
-        setup.classList.add('hidden');
-        play.classList.remove('hidden');
-        
-        let pairs = 4;
-        let cols = 4;
-        if (diff === 'medium') { pairs = 6; cols = 4; }
-        if (diff === 'hard') { pairs = 8; cols = 4; }
-        if (diff === 'insane') { pairs = 12; cols = 6; }
-
-        grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
-        
-        const icons = ['⚔️', '🛡️', '🔥', '❄️', '⚡', '🌟', '💎', '🐉', '🍀', '🎭', '🏹', '🧪'];
-        const gameIcons = [...icons.slice(0, pairs), ...icons.slice(0, pairs)];
-        gameIcons.sort(() => Math.random() - 0.5);
-
-        grid.innerHTML = '';
-        gameIcons.forEach((icon, i) => {
-            const card = document.createElement('div');
-            card.className = 'memory-card';
-            card.dataset.icon = icon;
-            card.dataset.index = i;
-            card.onclick = () => flipCard(card);
-            grid.appendChild(card);
-        });
-
-        timer = 0;
-        score = 0;
-        matched = 0;
-        document.getElementById('game-timer').innerText = timer;
-        document.getElementById('game-score').innerText = score;
-        
-        timerInterval = setInterval(() => {
-            timer++;
-            document.getElementById('game-timer').innerText = timer;
-        }, 1000);
-    }
-
-    function flipCard(card) {
-        if (flipped.length < 2 && !card.classList.contains('flipped')) {
-            card.classList.add('flipped');
-            card.innerText = card.dataset.icon;
-            flipped.push(card);
-
-            if (flipped.length === 2) {
-                if (flipped[0].dataset.icon === flipped[1].dataset.icon) {
-                    flipped.forEach(c => c.classList.add('matched'));
-                    matched++;
-                    score += 10;
-                    document.getElementById('game-score').innerText = score;
-                    flipped = [];
-                    if (matched === grid.children.length / 2) {
-                        clearInterval(timerInterval);
-                        setTimeout(() => alert(`VICTORY! Score: ${score}, Time: ${timer}s`), 500);
-                    }
-                } else {
-                    setTimeout(() => {
-                        flipped.forEach(c => {
-                            c.classList.remove('flipped');
-                            c.innerText = '';
-                        });
-                        flipped = [];
-                    }, 1000);
-                }
-            }
-        }
-    }
-
-    function resetGame() {
-        clearInterval(timerInterval);
-        setup.classList.remove('hidden');
-        play.classList.add('hidden');
-        grid.innerHTML = '';
-        flipped = [];
-    }
 }
 
 init();
