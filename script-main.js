@@ -1,7 +1,7 @@
 /* MAIN CONTROLLER: DATA BINDING, FILTERING, EVENT HANDLING */
 
 let currentCat = 'Character';
-let filters = { search: '', rarity: '', tag: '' };
+let filters = { search: '', rarity: '', tags: [] }; // Changed tag to tags array
 
 // INITIALIZE
 async function initRealm() {
@@ -13,6 +13,7 @@ async function initRealm() {
     document.getElementById('start-btn').onclick = (e) => {
         document.getElementById('start-btn').classList.add('hidden');
         document.getElementById('patch-btn').classList.add('hidden');
+        document.querySelector('.patch-ver-text').classList.add('hidden');
         document.getElementById('category-grid').classList.remove('hidden');
     };
 
@@ -20,6 +21,7 @@ async function initRealm() {
     document.getElementById('cancel-cat-btn').onclick = () => {
         document.getElementById('start-btn').classList.remove('hidden');
         document.getElementById('patch-btn').classList.remove('hidden');
+        document.querySelector('.patch-ver-text').classList.remove('hidden');
         document.getElementById('category-grid').classList.add('hidden');
     };
 
@@ -83,7 +85,7 @@ async function initRealm() {
     });
 
     document.getElementById('reset-filters').onclick = () => {
-        filters = { search: '', rarity: '', tag: '' };
+        filters = { search: '', rarity: '', tags: [] };
         document.getElementById('unit-search').value = '';
         document.querySelectorAll('.r-chip, .t-chip').forEach(c => c.classList.remove('active'));
         renderArchive();
@@ -97,7 +99,7 @@ function selectRealm(cat) {
     UI.modal.classList.add('hidden');
     
     // Reset internal filters for new category
-    filters = { search: '', rarity: '', tag: '' };
+    filters = { search: '', rarity: '', tags: [] };
     document.getElementById('unit-search').value = '';
     document.querySelectorAll('.r-chip').forEach(c => c.classList.remove('active'));
     
@@ -121,11 +123,10 @@ function populateTags() {
         span.onclick = () => {
             if (span.classList.contains('active')) {
                 span.classList.remove('active');
-                filters.tag = '';
+                filters.tags = filters.tags.filter(t => t !== tag);
             } else {
-                document.querySelectorAll('.t-chip').forEach(c => c.classList.remove('active'));
                 span.classList.add('active');
-                filters.tag = tag;
+                filters.tags.push(tag);
             }
             renderArchive();
         };
@@ -139,8 +140,9 @@ function renderArchive() {
         const matchCat = u.category === currentCat;
         const matchSearch = u.name.toLowerCase().includes(filters.search);
         const matchRarity = filters.rarity ? u.rarity === filters.rarity : true;
-        const matchTag = filters.tag ? (u.tags && u.tags.includes(filters.tag)) : true;
-        return matchCat && matchSearch && matchRarity && matchTag;
+        // Multi-tag match: must contain all selected tags
+        const matchTags = filters.tags.length > 0 ? filters.tags.every(t => u.tags && u.tags.includes(t)) : true;
+        return matchCat && matchSearch && matchRarity && matchTags;
     });
 
     grid.innerHTML = filtered.map(u => `
@@ -181,7 +183,7 @@ function showLegendDetail(name) {
 function jumpToTag(tag) {
     UI.showPage('page-2');
     document.getElementById('filter-panel').classList.remove('hidden');
-    filters.tag = tag;
+    filters.tags = [tag]; // Set to single tag on jump
     renderArchive();
     
     // Sync UI chips
