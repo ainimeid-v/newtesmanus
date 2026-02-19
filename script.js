@@ -211,6 +211,23 @@ async function init() {
     
     setInterval(() => UI.updateClock(), 1000);
     UI.updateClock();
+
+    // REVISI PAGE 3: AUTO HIDE NAV ON SCROLL
+    const page3 = document.getElementById('page-3');
+    const nav3 = page3.querySelector('.detail-nav-static');
+    let lastScrollTop = 0;
+
+    page3.addEventListener('scroll', () => {
+        let st = page3.scrollTop;
+        if (st > lastScrollTop && st > 50) {
+            // Scroll Down
+            nav3.classList.add('nav-hidden');
+        } else {
+            // Scroll Up
+            nav3.classList.remove('nav-hidden');
+        }
+        lastScrollTop = st <= 0 ? 0 : st;
+    }, false);
 }
 
 function selectRealm(cat) {
@@ -264,7 +281,7 @@ function renderArchive() {
         <div class="unit-card" onclick="showLegendDetail('${u.name}')">
             <div style="position:relative">
                 <img src="${u.main_image_url}" alt="${u.name}">
-                <div class="unit-rarity">${u.rarity}</div>
+                <div class="unit-rarity" data-rarity="${u.rarity}">${u.rarity}</div>
             </div>
             <div class="unit-info"><div class="name">${u.name}</div></div>
         </div>

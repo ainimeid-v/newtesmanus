@@ -122,7 +122,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    transform: translateY(-80px); /* Lifted more */
+    transform: translateY(-100px); /* REVISI: NAIKAN SEDIKIT (was -80px) */
 }
 
 .rpg-title {
@@ -321,7 +321,7 @@ body {
 .rpg-search-box input {
     background: transparent; border: none; color: var(--text-main);
     padding: 10px 5px; width: 100%; font-size: 0.85rem;
-    outline: none !important; /* Removed outline */
+    outline: none !important;
 }
 
 .rpg-filter-btn {
@@ -369,8 +369,6 @@ body {
     font-weight: 700;
 }
 
-.rpg-btn-small:hover { background: var(--accent-clr); color: white; }
-
 /* GRID FIX PAGE 2 */
 .unit-grid {
     display: grid;
@@ -391,14 +389,22 @@ body {
 .unit-info { padding: 6px; text-align: center; }
 .unit-info .name { font-size: 0.6rem; font-weight: 700; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
+/* REVISI PAGE 2: RARITY COLORS & FONT */
 .unit-rarity {
     position: absolute; top: 5px; right: 5px;
-    background: rgba(var(--accent-clr), 0.2); /* Concept like back button */
-    color: var(--accent-clr);
-    border: 1px solid var(--accent-clr);
-    padding: 2px 6px; border-radius: 4px; font-size: 0.6rem; font-weight: 900;
+    color: white; /* REVISI: FONT PUTIH */
+    padding: 4px 8px; /* REVISI: UKURAN LEBIH BESAR */
+    border-radius: 4px; font-size: 0.7rem; font-weight: 900;
     backdrop-filter: blur(4px);
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
 }
+
+/* REVISI PAGE 2: WARNA KOTAK SESUAI KATEGORI */
+.unit-rarity[data-rarity="S"] { background: #ff3e3e; }
+.unit-rarity[data-rarity="A"] { background: #ffcc00; }
+.unit-rarity[data-rarity="B"] { background: #00d2ff; }
+.unit-rarity[data-rarity="C"] { background: #00ff88; }
+.unit-rarity[data-rarity="D"] { background: #888888; }
 
 /* PAGE 3: DETAIL */
 .detail-nav-static {
@@ -408,7 +414,13 @@ body {
     top: 0;
     z-index: 50;
     padding: 15px 0;
-    background: transparent; /* Removed black background */
+    background: transparent;
+    transition: transform 0.3s ease; /* For auto-hide animation */
+}
+
+/* REVISI PAGE 3: AUTO HIDE NAV */
+.detail-nav-static.nav-hidden {
+    transform: translateY(-100%);
 }
 
 .nav-btn-circle {
@@ -438,17 +450,20 @@ body {
     font-family: 'Orbitron', sans-serif; font-size: 1.3rem; font-weight: 900;
 }
 
-.unit-bio { text-align: center; transform: translateY(-25px); /* Lifted more */ }
+.unit-bio { text-align: center; transform: translateY(-15px); /* REVISI: TURUNIN SEDIKIT (was -25px) */ }
 .unit-bio h1 { font-family: 'Cinzel', serif; font-size: 1.8rem; color: var(--accent-clr); margin-bottom: 5px; }
 .unit-bio h3 { font-style: italic; color: var(--text-muted); font-size: 0.8rem; margin-bottom: 15px; }
 
 .detail-tags { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }
 .tag { background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 12px; font-size: 0.65rem; border: 1px solid var(--accent-clr); color: var(--accent-clr); font-weight: 700; }
 
+/* REVISI PAGE 3: LORE BOX & NEON EFFECT */
 .rpg-box {
-    background: var(--card-bg); border: 1px solid var(--border-clr);
+    background: rgba(255,255,255,0.05); /* REVISI: PANEL LEBIH TERANG */
+    border: 1px solid var(--accent-clr); /* REVISI: WARNA SAMA DENGAN TAGS */
     border-radius: 12px; padding: 20px 15px 15px; text-align: left; position: relative;
     height: auto; min-height: 80px;
+    box-shadow: 0 0 15px rgba(var(--accent-clr), 0.3); /* REVISI: EFEK NEON */
 }
 
 .box-header {
@@ -458,8 +473,12 @@ body {
     font-family: 'Orbitron', sans-serif;
 }
 
+#detail-story {
+    color: var(--accent-clr); /* REVISI: WARNA SAMA DENGAN TAGS */
+}
+
 /* GALLERY CAROUSEL */
-.unit-gallery { margin-top: 10px; padding-bottom: 20px; }
+.unit-gallery { margin-top: 20px; padding-bottom: 20px; } /* REVISI: JARAK DARI PANEL LORE */
 .gallery-title { font-family: 'Orbitron', sans-serif; font-size: 0.7rem; color: var(--accent-clr); text-align: center; margin-bottom: 15px; letter-spacing: 2px; }
 .carousel { width: 100%; overflow: hidden; padding: 10px 0; }
 .carousel-track { display: flex; align-items: center; justify-content: center; gap: 15px; min-height: 110px; }
@@ -527,7 +546,13 @@ body {
 }
 
 @keyframes spin { to { transform: rotate(360deg); } }
-@keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* REVISI PAGE 1: LOADING ANIMATION (NO DOWNWARD FIRST) */
+@keyframes fadeInDown { 
+    from { opacity: 0; transform: translateY(0); } /* REVISI: START FROM 0, NOT -20px */
+    to { opacity: 1; transform: translateY(0); } 
+}
+
 @keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
 
 /* Desktop */
