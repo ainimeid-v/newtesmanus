@@ -146,13 +146,13 @@ async function init() {
 
     document.getElementById('patch-btn').onclick = () => {
         document.getElementById('patch-text').innerHTML = `
-            <strong>UPDATE v1.0.5</strong><br><br>
-            - Fixed layout positioning on Page 1.<br>
-            - Fixed Page 2 Grid size (Grid 3 Small).<br>
-            - Fixed Page 3 navigation alignment.<br>
-            - Fixed Patch Note Modal UI.<br>
-            - Consolidated CSS/JS files for better stability.<br><br>
-            <em>All systems operational.</em>
+            <strong>UPDATE v1.0.8</strong><br><br>
+            - Improved UI transitions and animations.<br>
+            - Fixed sticky navigation for Archive and Detail.<br>
+            - Optimized slider stability (no more vibration).<br>
+            - Theme-consistent button colors across all modals.<br>
+            - Dynamic Lore box auto-adjustment.<br><br>
+            <em>System fully optimized.</em>
         `;
         UI.patchModal.classList.remove('hidden');
     };

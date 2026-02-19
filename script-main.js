@@ -9,7 +9,7 @@ async function initRealm() {
     UI.loading.style.opacity = '0';
     setTimeout(() => UI.loading.classList.add('hidden'), 500);
     
-    // START BTN - FIX BUG: SHOW GRID ONLY ON CLICK
+    // START BTN - SMOOTH TOGGLE
     document.getElementById('start-btn').onclick = (e) => {
         document.getElementById('start-btn').classList.add('hidden');
         document.getElementById('patch-btn').classList.add('hidden');
@@ -26,13 +26,13 @@ async function initRealm() {
     // PATCH BTN
     document.getElementById('patch-btn').onclick = () => {
         document.getElementById('patch-text').innerHTML = `
-            <strong>UPDATE v1.0.2</strong><br><br>
-            - Added dynamic realm selection system.<br>
-            - Fixed Page 1 scroll issues.<br>
-            - Improved tag visibility and filtering.<br>
-            - Optimized Page 3 navigation positioning.<br>
-            - New unit entries synchronized with Archive.<br><br>
-            <em>Check back later for more updates!</em>
+            <strong>UPDATE v1.0.8</strong><br><br>
+            - Improved UI transitions and animations.<br>
+            - Fixed sticky navigation for Archive and Detail.<br>
+            - Optimized slider stability (no more vibration).<br>
+            - Theme-consistent button colors across all modals.<br>
+            - Dynamic Lore box auto-adjustment.<br><br>
+            <em>System fully optimized.</em>
         `;
         UI.patchModal.classList.remove('hidden');
     };
@@ -116,7 +116,7 @@ function populateTags() {
     container.innerHTML = '';
     tags.forEach(tag => {
         const span = document.createElement('span');
-        span.className = 't-chip'; // FIXED CLASS
+        span.className = 't-chip';
         span.innerText = tag;
         span.onclick = () => {
             if (span.classList.contains('active')) {
