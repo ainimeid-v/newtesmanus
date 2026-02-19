@@ -9,14 +9,29 @@ async function initRealm() {
     UI.loading.style.opacity = '0';
     setTimeout(() => UI.loading.classList.add('hidden'), 500);
     
-    // START BTN
+    // START BTN - FIX BUG: SHOW GRID ONLY ON CLICK
     document.getElementById('start-btn').onclick = (e) => {
-        e.target.classList.add('hidden');
-        document.getElementById('category-grid').classList.remove('hidden-initial');
+        document.getElementById('start-btn').classList.add('hidden');
+        document.getElementById('patch-btn').classList.add('hidden');
+        document.getElementById('category-grid').classList.remove('hidden');
+    };
+
+    // PATCH BTN
+    document.getElementById('patch-btn').onclick = () => {
+        document.getElementById('patch-text').innerHTML = `
+            <strong>UPDATE v1.0.2</strong><br><br>
+            - Added dynamic realm selection system.<br>
+            - Fixed Page 1 scroll issues.<br>
+            - Improved tag visibility and filtering.<br>
+            - Optimized Page 3 navigation positioning.<br>
+            - New unit entries synchronized with Archive.<br><br>
+            <em>Check back later for more updates!</em>
+        `;
+        UI.patchModal.classList.remove('hidden');
     };
 
     // CATEGORY SELECTION
-    document.querySelectorAll('.cat-card, .m-cat').forEach(card => {
+    document.querySelectorAll('.cat-card').forEach(card => {
         card.onclick = () => selectRealm(card.dataset.category);
     });
 
@@ -26,8 +41,19 @@ async function initRealm() {
     
     // FILTER TOGGLE
     document.getElementById('filter-btn').onclick = () => document.getElementById('filter-panel').classList.toggle('hidden');
-    document.getElementById('quick-change-btn').onclick = () => document.getElementById('category-modal').classList.remove('hidden');
-    document.getElementById('close-modal').onclick = () => document.getElementById('category-modal').classList.add('hidden');
+    
+    // QUICK CHANGE - DYNAMIC MODAL
+    document.getElementById('quick-change-btn').onclick = () => {
+        const modalList = document.getElementById('mini-cat-list');
+        const cats = ['Character', 'Monster', 'Pet', 'Item', 'Magic'];
+        modalList.innerHTML = cats
+            .filter(c => c !== currentCat) // HIDE CURRENT CAT
+            .map(c => `<div class="m-cat" onclick="selectRealm('${c}')">${c}</div>`)
+            .join('');
+        UI.modal.classList.remove('hidden');
+    };
+
+    document.getElementById('close-modal').onclick = () => UI.modal.classList.add('hidden');
 
     // SEARCH & FILTER INPUTS
     document.getElementById('unit-search').oninput = (e) => {
@@ -61,7 +87,7 @@ function selectRealm(cat) {
     currentCat = cat;
     document.body.className = `theme-${cat.toLowerCase()}`;
     document.getElementById('category-title').innerText = cat.toUpperCase();
-    document.getElementById('category-modal').classList.add('hidden');
+    UI.modal.classList.add('hidden');
     
     // Reset internal filters for new category
     filters = { search: '', rarity: '', tag: '' };
@@ -83,7 +109,7 @@ function populateTags() {
     container.innerHTML = '';
     tags.forEach(tag => {
         const span = document.createElement('span');
-        span.className = 'r-chip t-chip';
+        span.className = 't-chip'; // FIXED CLASS
         span.innerText = tag;
         span.onclick = () => {
             if (span.classList.contains('active')) {

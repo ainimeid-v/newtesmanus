@@ -30,7 +30,7 @@
     </div>
 
     <!-- PAGE 1: WORLD MAP (OPENING) -->
-    <section id="page-1" class="page active">
+    <section id="page-1" class="page active no-scroll">
         <div class="hero-section">
             <div class="floating-decorations">
                 <div class="circle-1"></div>
@@ -38,10 +38,14 @@
             </div>
             <h1 class="rpg-title">UNIT EXPLORER</h1>
             <p class="rpg-subtitle">Dive into the World of Legends. Choose your destiny.</p>
+            <p class="rpg-flavor-text">Ancient legends are waiting for your command. Explore the archives and find your path.</p>
             
-            <button id="start-btn" class="rpg-btn glow">ENTER WORLD</button>
+            <div class="p1-btns">
+                <button id="start-btn" class="rpg-btn glow">ENTER WORLD</button>
+                <button id="patch-btn" class="rpg-btn-outline">PATCH NOTES</button>
+            </div>
             
-            <div id="category-grid" class="category-grid hidden-initial">
+            <div id="category-grid" class="category-grid hidden">
                 <div class="cat-card" data-category="Character" style="--clr:#ff3e3e">
                     <div class="cat-icon"><i class="fas fa-shield-halved"></i></div>
                     <span class="cat-name">CHARACTER</span>
@@ -75,8 +79,8 @@
                         <i class="fas fa-chevron-left"></i>
                     </button>
                     <h2 id="category-title">ARCHIVE</h2>
-                    <button id="quick-change-btn" class="nav-btn" title="Change Category">
-                        <i class="fas fa-grid-2"></i>
+                    <button id="quick-change-btn" class="nav-btn-highlight" title="Change Category">
+                        <i class="fas fa-th-large"></i> <span>REALM</span>
                     </button>
                 </div>
                 
@@ -120,9 +124,9 @@
     <!-- PAGE 3: LEGENDARY DETAIL -->
     <section id="page-3" class="page">
         <div class="page-container detail-view">
-            <div class="detail-nav">
-                <button class="nav-btn back-to-2"><i class="fas fa-arrow-left"></i></button>
-                <button class="nav-btn back-to-1"><i class="fas fa-house"></i></button>
+            <div class="detail-nav-static">
+                <button class="nav-btn-circle back-to-2"><i class="fas fa-arrow-left"></i></button>
+                <button class="nav-btn-circle back-to-1"><i class="fas fa-house"></i></button>
             </div>
 
             <div class="detail-layout">
@@ -164,14 +168,21 @@
         <div class="modal-backdrop"></div>
         <div class="modal-content">
             <h3>SELECT REALM</h3>
-            <div class="mini-cat-list">
-                <div class="m-cat" data-category="Character">Character</div>
-                <div class="m-cat" data-category="Monster">Monster</div>
-                <div class="m-cat" data-category="Pet">Pet</div>
-                <div class="m-cat" data-category="Item">Item</div>
-                <div class="m-cat" data-category="Magic">Magic</div>
+            <div id="mini-cat-list" class="mini-cat-list">
+                <!-- Populated dynamically to hide current cat -->
             </div>
             <button id="close-modal" class="rpg-btn-small">CLOSE</button>
+        </div>
+    </div>
+
+    <div id="patch-modal" class="rpg-modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content patch-content">
+            <h3>PATCH NOTES</h3>
+            <div class="patch-scroll-area">
+                <p id="patch-text">Loading transmission...</p>
+            </div>
+            <button id="close-patch" class="rpg-btn-small">CLOSE</button>
         </div>
     </div>
 

@@ -7,6 +7,7 @@ const UI = {
     date: document.getElementById('system-date'),
     loading: document.getElementById('loading-screen'),
     modal: document.getElementById('category-modal'),
+    patchModal: document.getElementById('patch-modal'),
     viewer: document.getElementById('image-viewer'),
     viewerImg: document.getElementById('viewer-img'),
     
@@ -43,7 +44,7 @@ const UI = {
         this.themeToggle.innerHTML = next === 'dark' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
     },
 
-    // CAROUSEL LOGIC
+    // CAROUSEL LOGIC - FIXED FOR POPUP
     handleCarousel(el) {
         const track = document.getElementById('carousel-track');
         const imgs = Array.from(track.querySelectorAll('.extra-img'));
@@ -78,3 +79,4 @@ UI.themeToggle.onclick = () => UI.toggleTheme();
 
 // Close Viewer
 document.querySelector('.close-viewer').onclick = () => UI.viewer.classList.add('hidden');
+document.getElementById('close-patch').onclick = () => UI.patchModal.classList.add('hidden');
