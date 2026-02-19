@@ -1,0 +1,32 @@
+/* THEME SPECIFIC COLORS */
+.theme-character {
+    --accent-clr: #ff3e3e;
+}
+
+.theme-monster {
+    --accent-clr: #00ff88;
+}
+
+.theme-pet {
+    --accent-clr: #ffcc00;
+}
+
+.theme-item {
+    --accent-clr: #00d2ff;
+}
+
+.theme-magic {
+    --accent-clr: #9d50bb;
+}
+
+/* Category Item Styling overrides */
+.cat-card[data-category="Character"] .cat-icon { color: #ff3e3e; }
+.cat-card[data-category="Monster"] .cat-icon { color: #00ff88; }
+.cat-card[data-category="Pet"] .cat-icon { color: #ffcc00; }
+.cat-card[data-category="Item"] .cat-icon { color: #00d2ff; }
+.cat-card[data-category="Magic"] .cat-icon { color: #9d50bb; }
+
+/* Dark/Light Transition */
+body, .page, .rpg-header, .unit-card, .cat-card, .rpg-box, .modal-content {
+    transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
+}

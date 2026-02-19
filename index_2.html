@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ANIME FANTASY RPG - UNIT EXPLORER</title>
+    
+    <!-- CSS FILES -->
+    <link rel="stylesheet" href="style-core.css">
+    <link rel="stylesheet" href="style-themes.css">
+    <link rel="stylesheet" href="style-rpg.css">
+    
+    <!-- ICONS & FONTS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Exo+2:wght@300;400;600;800&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body class="theme-character">
+
+    <!-- TOP HUD: RPG STYLE -->
+    <div id="top-hud">
+        <div class="hud-left">
+            <div id="system-clock">00:00:00</div>
+            <div id="system-date">20 FEB 2026</div>
+        </div>
+        <div class="hud-right">
+            <button id="theme-toggle" title="Switch Light/Dark Mode">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- PAGE 1: WORLD MAP (OPENING) -->
+    <section id="page-1" class="page active">
+        <div class="hero-section">
+            <div class="floating-decorations">
+                <div class="circle-1"></div>
+                <div class="circle-2"></div>
+            </div>
+            <h1 class="rpg-title">UNIT EXPLORER</h1>
+            <p class="rpg-subtitle">Dive into the World of Legends. Choose your destiny.</p>
+            
+            <button id="start-btn" class="rpg-btn glow">ENTER WORLD</button>
+            
+            <div id="category-grid" class="category-grid hidden-initial">
+                <div class="cat-card" data-category="Character" style="--clr:#ff3e3e">
+                    <div class="cat-icon"><i class="fas fa-shield-halved"></i></div>
+                    <span class="cat-name">CHARACTER</span>
+                </div>
+                <div class="cat-card" data-category="Monster" style="--clr:#00ff88">
+                    <div class="cat-icon"><i class="fas fa-dragon"></i></div>
+                    <span class="cat-name">MONSTER</span>
+                </div>
+                <div class="cat-card" data-category="Pet" style="--clr:#ffcc00">
+                    <div class="cat-icon"><i class="fas fa-paw"></i></div>
+                    <span class="cat-name">PET</span>
+                </div>
+                <div class="cat-card" data-category="Item" style="--clr:#00d2ff">
+                    <div class="cat-icon"><i class="fas fa-gem"></i></div>
+                    <span class="cat-name">ITEM</span>
+                </div>
+                <div class="cat-card" data-category="Magic" style="--clr:#9d50bb">
+                    <div class="cat-icon"><i class="fas fa-wand-sparkles"></i></div>
+                    <span class="cat-name">MAGIC</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PAGE 2: ARCHIVE (LIST) -->
+    <section id="page-2" class="page">
+        <div class="page-container">
+            <header class="rpg-header">
+                <div class="header-nav">
+                    <button class="nav-btn back-to-1" title="Back to World Map">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <h2 id="category-title">ARCHIVE</h2>
+                    <button id="quick-change-btn" class="nav-btn" title="Change Category">
+                        <i class="fas fa-grid-2"></i>
+                    </button>
+                </div>
+                
+                <div class="search-filter-container">
+                    <div class="rpg-search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="unit-search" placeholder="Search legend...">
+                    </div>
+                    <button id="filter-btn" class="rpg-filter-btn">
+                        <i class="fas fa-sliders"></i>
+                    </button>
+                </div>
+
+                <div id="filter-panel" class="filter-panel hidden">
+                    <div class="filter-section">
+                        <label>RARITY</label>
+                        <div class="rarity-selector">
+                            <span class="r-chip" data-rarity="S">S</span>
+                            <span class="r-chip" data-rarity="A">A</span>
+                            <span class="r-chip" data-rarity="B">B</span>
+                            <span class="r-chip" data-rarity="C">C</span>
+                            <span class="r-chip" data-rarity="D">D</span>
+                        </div>
+                    </div>
+                    <div class="filter-section">
+                        <label>TAGS</label>
+                        <div id="dynamic-tags" class="tag-selector">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                    <button id="reset-filters" class="rpg-btn-small">PURGE FILTERS</button>
+                </div>
+            </header>
+
+            <div id="unit-grid" class="unit-grid">
+                <!-- Units Populated by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- PAGE 3: LEGENDARY DETAIL -->
+    <section id="page-3" class="page">
+        <div class="page-container detail-view">
+            <div class="detail-nav">
+                <button class="nav-btn back-to-2"><i class="fas fa-arrow-left"></i></button>
+                <button class="nav-btn back-to-1"><i class="fas fa-house"></i></button>
+            </div>
+
+            <div class="detail-layout">
+                <div class="unit-visual">
+                    <div class="image-frame">
+                        <img id="detail-img" src="" alt="Legend Image">
+                        <div id="detail-rarity-badge">S</div>
+                    </div>
+                </div>
+
+                <div class="unit-bio">
+                    <h1 id="detail-name">LEGEND NAME</h1>
+                    <h3 id="detail-nickname">"THE TITLE"</h3>
+                    
+                    <div id="detail-tags-container" class="detail-tags">
+                        <!-- Tags -->
+                    </div>
+
+                    <div class="rpg-box story-box">
+                        <div class="box-header">LORE / STORY</div>
+                        <p id="detail-story">Ancient texts tell of a hero...</p>
+                    </div>
+                </div>
+
+                <div class="unit-gallery">
+                    <h4 class="gallery-title">VISUAL ARCHIVE</h4>
+                    <div class="carousel">
+                        <div id="carousel-track" class="carousel-track">
+                            <!-- Extra Images -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MODALS & OVERLAYS -->
+    <div id="category-modal" class="rpg-modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <h3>SELECT REALM</h3>
+            <div class="mini-cat-list">
+                <div class="m-cat" data-category="Character">Character</div>
+                <div class="m-cat" data-category="Monster">Monster</div>
+                <div class="m-cat" data-category="Pet">Pet</div>
+                <div class="m-cat" data-category="Item">Item</div>
+                <div class="m-cat" data-category="Magic">Magic</div>
+            </div>
+            <button id="close-modal" class="rpg-btn-small">CLOSE</button>
+        </div>
+    </div>
+
+    <div id="image-viewer" class="viewer-overlay hidden">
+        <span class="close-viewer">&times;</span>
+        <img id="viewer-img" src="">
+    </div>
+
+    <div id="loading-screen" class="loading-overlay">
+        <div class="rpg-loader">
+            <div class="loader-circle"></div>
+            <p>SYNCING REALM DATA...</p>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="script-data.js"></script>
+    <script src="script-ui.js"></script>
+    <script src="script-main.js"></script>
+</body>
+</html>
