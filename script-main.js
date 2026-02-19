@@ -16,6 +16,13 @@ async function initRealm() {
         document.getElementById('category-grid').classList.remove('hidden');
     };
 
+    // CANCEL CAT BTN
+    document.getElementById('cancel-cat-btn').onclick = () => {
+        document.getElementById('start-btn').classList.remove('hidden');
+        document.getElementById('patch-btn').classList.remove('hidden');
+        document.getElementById('category-grid').classList.add('hidden');
+    };
+
     // PATCH BTN
     document.getElementById('patch-btn').onclick = () => {
         document.getElementById('patch-text').innerHTML = `

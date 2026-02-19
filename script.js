@@ -134,6 +134,16 @@ async function init() {
         document.getElementById('category-grid').classList.remove('hidden');
     };
 
+    // CANCEL CAT BTN
+    const cancelBtn = document.getElementById('cancel-cat-btn');
+    if (cancelBtn) {
+        cancelBtn.onclick = () => {
+            document.getElementById('start-btn').classList.remove('hidden');
+            document.getElementById('patch-btn').classList.remove('hidden');
+            document.getElementById('category-grid').classList.add('hidden');
+        };
+    }
+
     document.getElementById('patch-btn').onclick = () => {
         document.getElementById('patch-text').innerHTML = `
             <strong>UPDATE v1.0.5</strong><br><br>

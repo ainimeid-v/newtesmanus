@@ -36,16 +36,21 @@
             </div>
             <div class="hero-content">
                 <h1 class="rpg-title">UNIT EXPLORER</h1>
+                
+                <div class="p1-btns">
+                    <button id="start-btn" class="rpg-btn glow">ENTER WORLD</button>
+                </div>
+
                 <p class="rpg-subtitle">Dive into the World of Legends. Choose your destiny.</p>
                 <p class="rpg-flavor-text">Ancient legends are waiting for your command. Explore the archives and find your path.</p>
                 
                 <div class="p1-btns">
-                    <button id="start-btn" class="rpg-btn glow">ENTER WORLD</button>
                     <button id="patch-btn" class="rpg-btn-outline">PATCH NOTES</button>
                 </div>
             </div>
             
             <div id="category-grid" class="category-grid hidden">
+                <button id="cancel-cat-btn" class="cancel-btn"><i class="fas fa-times"></i></button>
                 <div class="cat-card" data-category="Character" style="--clr:#ff3e3e">
                     <div class="cat-icon"><i class="fas fa-shield-halved"></i></div>
                     <span class="cat-name">CHARACTER</span>
@@ -111,7 +116,7 @@
                             <!-- Populated by JS -->
                         </div>
                     </div>
-                    <button id="reset-filters" class="rpg-btn-small">PURGE FILTERS</button>
+                    <button id="reset-filters" class="rpg-btn-small"><i class="fas fa-trash-can"></i></button>
                 </div>
             </header>
 
