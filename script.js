@@ -123,9 +123,54 @@ function getMockArchive() {
 
 // --- MAIN LOGIC ---
 async function init() {
+    // Show loading with progress animation
+    showLoadingProgress();
     await loadRealmData();
+    completeLoadingProgress();
+}
+
+function showLoadingProgress() {
+    const loader = document.querySelector('.rpg-loader');
+    if (!loader) return;
+    
+    let progress = 0;
+    const colors = ['#ff3e3e', '#00ff88', '#ffcc00', '#00d2ff', '#9d50bb'];
+    let colorIndex = 0;
+    
+    const interval = setInterval(() => {
+        progress += Math.random() * 30;
+        if (progress > 100) progress = 100;
+        
+        const loaderCircle = document.querySelector('.loader-circle');
+        if (loaderCircle) {
+            loaderCircle.style.borderTopColor = colors[colorIndex % colors.length];
+            colorIndex++;
+        }
+        
+        if (progress >= 100) {
+            clearInterval(interval);
+        }
+    }, 300);
+}
+
+function completeLoadingProgress() {
     UI.loading.style.opacity = '0';
     setTimeout(() => UI.loading.classList.add('hidden'), 500);
+    
+    // Restore page state from sessionStorage
+    const savedPage = sessionStorage.getItem('currentPage');
+    const savedCategory = sessionStorage.getItem('currentCategory');
+    
+    if (savedPage && savedPage !== 'page-1') {
+        if (savedCategory) {
+            currentCat = savedCategory;
+            document.body.className = `theme-${savedCategory.toLowerCase()}`;
+            document.getElementById('category-title').innerText = savedCategory.toUpperCase();
+            populateTags();
+            renderArchive();
+        }
+        UI.showPage(savedPage);
+    }
 
     // Page 1
     document.getElementById('start-btn').onclick = () => {
@@ -134,6 +179,7 @@ async function init() {
         const verText = document.querySelector('.patch-ver-text');
         if (verText) verText.classList.add('hidden');
         document.getElementById('category-grid').classList.remove('hidden');
+        sessionStorage.setItem('currentPage', 'page-1');
     };
 
     // CANCEL CAT BTN
@@ -145,6 +191,7 @@ async function init() {
             const verText = document.querySelector('.patch-ver-text');
             if (verText) verText.classList.remove('hidden');
             document.getElementById('category-grid').classList.add('hidden');
+            sessionStorage.setItem('currentPage', 'page-1');
         };
     }
 
@@ -166,8 +213,15 @@ async function init() {
     });
 
     // Nav
-    document.querySelectorAll('.back-to-1').forEach(btn => btn.onclick = () => UI.showPage('page-1'));
-    document.querySelectorAll('.back-to-2').forEach(btn => btn.onclick = () => UI.showPage('page-2'));
+    document.querySelectorAll('.back-to-1').forEach(btn => btn.onclick = () => {
+        sessionStorage.setItem('currentPage', 'page-1');
+        UI.showPage('page-1');
+    });
+    document.querySelectorAll('.back-to-2').forEach(btn => btn.onclick = () => {
+        sessionStorage.setItem('currentPage', 'page-2');
+        sessionStorage.setItem('currentCategory', currentCat);
+        UI.showPage('page-2');
+    });
     
     // Page 2
     document.getElementById('filter-btn').onclick = () => document.getElementById('filter-panel').classList.toggle('hidden');
@@ -223,6 +277,8 @@ function selectRealm(cat) {
     document.querySelectorAll('.r-chip').forEach(c => c.classList.remove('active'));
     populateTags();
     renderArchive();
+    sessionStorage.setItem('currentPage', 'page-2');
+    sessionStorage.setItem('currentCategory', cat);
     UI.showPage('page-2');
 }
 
@@ -286,10 +342,14 @@ function showLegendDetail(name) {
     track.innerHTML = images.map((img, i) => `
         <img class="extra-img ${i === 1 ? 'active' : ''}" src="${img}" onclick="UI.handleCarousel(this)">
     `).join('');
+    sessionStorage.setItem('currentPage', 'page-3');
+    sessionStorage.setItem('currentCategory', currentCat);
     UI.showPage('page-3');
 }
 
 function jumpToTag(tag) {
+    sessionStorage.setItem('currentPage', 'page-2');
+    sessionStorage.setItem('currentCategory', currentCat);
     UI.showPage('page-2');
     document.getElementById('filter-panel').classList.remove('hidden');
     filters.tags = [tag];

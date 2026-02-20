@@ -15,9 +15,9 @@
     --primary-bg: #f5f5f5;
     --secondary-bg: #ffffff;
     --text-main: #1a1a1a;
-    --text-muted: #666666;
-    --card-bg: rgba(255, 255, 255, 0.95);
-    --border-clr: rgba(0, 0, 0, 0.1);
+    --text-muted: #555555;
+    --card-bg: rgba(255, 255, 255, 0.98);
+    --border-clr: rgba(0, 0, 0, 0.15);
 }
 
 /* THEME SPECIFIC OVERRIDES */
@@ -117,19 +117,16 @@ body {
 }
 
 .hero-content {
-    animation: fadeInDown 1s ease-out;
     margin-bottom: 30px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    transform: translateY(-80px); /* Lifted more */
 }
 
 .rpg-title {
     font-family: 'Cinzel', serif;
     font-size: 2.8rem;
     color: var(--text-main);
-    text-shadow: 0 0 20px var(--accent-clr);
     letter-spacing: 3px;
     margin-bottom: 25px;
 }
@@ -162,10 +159,11 @@ body {
 
 .patch-ver-text {
     font-family: 'Orbitron', sans-serif;
-    font-size: 0.6rem;
-    color: var(--text-muted);
+    font-size: 0.8rem;
+    color: var(--accent-clr);
     margin-top: 5px;
     letter-spacing: 1px;
+    font-weight: 700;
 }
 
 .rpg-btn {
@@ -177,12 +175,11 @@ body {
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    box-shadow: 0 0 15px var(--accent-clr);
     transition: var(--transition);
     width: 100%;
 }
 
-.rpg-btn.glow:hover { box-shadow: 0 0 30px var(--accent-clr); transform: translateY(-2px); }
+.rpg-btn:hover { transform: translateY(-2px); }
 
 .rpg-btn-outline {
     background: transparent;
@@ -354,7 +351,7 @@ body {
     transition: var(--transition);
 }
 
-.r-chip.active, .t-chip.active { background: var(--accent-clr); color: white; border-color: var(--accent-clr); box-shadow: 0 0 10px var(--accent-clr); }
+.r-chip.active, .t-chip.active { background: var(--accent-clr); color: white; border-color: var(--accent-clr); }
 
 .rpg-btn-small {
     background: rgba(var(--accent-clr), 0.1);
@@ -393,11 +390,10 @@ body {
 
 .unit-rarity {
     position: absolute; top: 5px; right: 5px;
-    background: rgba(var(--accent-clr), 0.2); /* Concept like back button */
-    color: var(--accent-clr);
+    background: var(--accent-clr);
+    color: white;
     border: 1px solid var(--accent-clr);
     padding: 2px 6px; border-radius: 4px; font-size: 0.6rem; font-weight: 900;
-    backdrop-filter: blur(4px);
 }
 
 /* PAGE 3: DETAIL */
@@ -421,7 +417,7 @@ body {
     backdrop-filter: blur(8px);
 }
 
-.nav-btn-circle:hover { background: var(--accent-clr); color: white; transform: scale(1.1); }
+.nav-btn-circle:hover { background: var(--accent-clr); color: white; }
 
 .detail-layout { display: flex; flex-direction: column; gap: 20px; }
 .unit-visual { width: 100%; max-width: 260px; margin: 0 auto; }
@@ -438,7 +434,7 @@ body {
     font-family: 'Orbitron', sans-serif; font-size: 1.3rem; font-weight: 900;
 }
 
-.unit-bio { text-align: center; transform: translateY(-25px); /* Lifted more */ }
+.unit-bio { text-align: center; transform: translateY(-10px); }
 .unit-bio h1 { font-family: 'Cinzel', serif; font-size: 1.8rem; color: var(--accent-clr); margin-bottom: 5px; }
 .unit-bio h3 { font-style: italic; color: var(--text-muted); font-size: 0.8rem; margin-bottom: 15px; }
 
@@ -451,6 +447,10 @@ body {
     height: auto; min-height: 80px;
 }
 
+.rpg-box p {
+    color: var(--accent-clr);
+}
+
 .box-header {
     position: absolute; top: -8px; left: 15px;
     background: var(--accent-clr); color: white;
@@ -459,7 +459,7 @@ body {
 }
 
 /* GALLERY CAROUSEL */
-.unit-gallery { margin-top: 10px; padding-bottom: 20px; }
+.unit-gallery { margin-top: 20px; padding-bottom: 20px; }
 .gallery-title { font-family: 'Orbitron', sans-serif; font-size: 0.7rem; color: var(--accent-clr); text-align: center; margin-bottom: 15px; letter-spacing: 2px; }
 .carousel { width: 100%; overflow: hidden; padding: 10px 0; }
 .carousel-track { display: flex; align-items: center; justify-content: center; gap: 15px; min-height: 110px; }
@@ -473,7 +473,7 @@ body {
 
 .extra-img.active {
     width: 90px; height: 90px; opacity: 1;
-    border: 2px solid var(--accent-clr); box-shadow: 0 0 15px var(--accent-clr);
+    border: 2px solid var(--accent-clr);
     transform: scale(1.1);
 }
 
