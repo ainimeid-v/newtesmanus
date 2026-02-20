@@ -9,7 +9,7 @@
     --border-clr: rgba(255, 255, 255, 0.1);
     --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
     --safe-area: 20px;
-    --mode-text: #000000; /* Default for Dark Mode (Text on accent/light bg) */
+    --mode-text: #ffffff; /* Dark Mode = White Text */
 }
 
 [data-theme="light"] {
@@ -19,7 +19,7 @@
     --text-muted: #555555;
     --card-bg: rgba(255, 255, 255, 0.98);
     --border-clr: rgba(0, 0, 0, 0.15);
-    --mode-text: #ffffff; /* Default for Light Mode (Text on accent/dark bg) */
+    --mode-text: #000000; /* Light Mode = Black Text */
 }
 
 /* THEME SPECIFIC OVERRIDES */
@@ -74,6 +74,7 @@ body {
     max-width: 600px;
     margin: 0 auto;
     padding: 0 var(--safe-area);
+    position: relative;
 }
 
 .hidden { display: none !important; }
@@ -105,17 +106,130 @@ body {
     display: flex; align-items: center; justify-content: center;
 }
 
+/* ===== ANIME FANTASY DECORATIONS ===== */
+
+/* Corner Ornaments */
+.corner-ornament {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+.corner-top-left {
+    top: 20px;
+    left: 20px;
+    border-top: 3px solid var(--accent-clr);
+    border-left: 3px solid var(--accent-clr);
+    border-radius: 10px 0 0 0;
+    animation: cornerPulse 3s ease-in-out infinite;
+}
+
+.corner-top-right {
+    top: 20px;
+    right: 20px;
+    border-top: 3px solid var(--accent-clr);
+    border-right: 3px solid var(--accent-clr);
+    border-radius: 0 10px 0 0;
+    animation: cornerPulse 3s ease-in-out infinite 0.5s;
+}
+
+.corner-bottom-left {
+    bottom: 20px;
+    left: 20px;
+    border-bottom: 3px solid var(--accent-clr);
+    border-left: 3px solid var(--accent-clr);
+    border-radius: 0 0 0 10px;
+    animation: cornerPulse 3s ease-in-out infinite 1s;
+}
+
+.corner-bottom-right {
+    bottom: 20px;
+    right: 20px;
+    border-bottom: 3px solid var(--accent-clr);
+    border-right: 3px solid var(--accent-clr);
+    border-radius: 0 0 10px 0;
+    animation: cornerPulse 3s ease-in-out infinite 1.5s;
+}
+
+/* Magical Particles */
+.magical-particles {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.magical-particles::before,
+.magical-particles::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(2px 2px at 20px 30px, var(--accent-clr), rgba(255,255,255,0)),
+        radial-gradient(2px 2px at 60px 70px, var(--accent-clr), rgba(255,255,255,0)),
+        radial-gradient(1px 1px at 50px 50px, var(--accent-clr), rgba(255,255,255,0)),
+        radial-gradient(1px 1px at 130px 80px, var(--accent-clr), rgba(255,255,255,0)),
+        radial-gradient(2px 2px at 90px 10px, var(--accent-clr), rgba(255,255,255,0));
+    background-repeat: repeat;
+    background-size: 200px 200px;
+    animation: particleFloat 20s linear infinite;
+    opacity: 0.15;
+}
+
+.magical-particles::after {
+    animation: particleFloat 25s linear infinite reverse;
+    opacity: 0.1;
+}
+
+/* Page Ornaments */
+.page-ornament {
+    position: absolute;
+    width: 100%;
+    height: 40px;
+    pointer-events: none;
+    opacity: 0.2;
+    background: linear-gradient(90deg, transparent, var(--accent-clr), transparent);
+    animation: ornamentGlow 3s ease-in-out infinite;
+}
+
+.page-2-top {
+    top: 10px;
+    left: 0;
+}
+
+.page-2-bottom {
+    bottom: 10px;
+    left: 0;
+}
+
+.page-3-top {
+    top: 10px;
+    left: 0;
+}
+
+.page-3-bottom {
+    bottom: 10px;
+    left: 0;
+}
+
 /* PAGE 1: HERO SECTION */
 .hero-section {
     height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* Change to start to move everything up */
-    padding-top: 80px; /* Control top spacing */
+    justify-content: flex-start;
+    padding-top: 80px;
     align-items: center;
     text-align: center;
     position: relative;
     background: radial-gradient(circle at center, rgba(var(--accent-clr),0.1) 0%, transparent 70%);
+    overflow: hidden;
 }
 
 .hero-content {
@@ -123,6 +237,8 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
+    z-index: 5;
 }
 
 .rpg-title {
@@ -131,10 +247,11 @@ body {
     color: var(--text-main);
     letter-spacing: 3px;
     margin-bottom: 25px;
+    animation: titlePulse 2s ease-in-out infinite;
 }
 
 .rpg-subtitle {
-    font-size: 0.7rem; /* Reduced size */
+    font-size: 0.7rem;
     color: var(--accent-clr);
     font-weight: 800;
     text-transform: uppercase;
@@ -143,8 +260,8 @@ body {
 }
 
 .rpg-flavor-text {
-    font-size: 0.7rem; /* Reduced size */
-    color: var(--mode-text); /* Mode-based color */
+    font-size: 0.7rem;
+    color: var(--mode-text); /* Corrected: Dark=White, Light=Black */
     max-width: 300px;
     font-style: italic;
     margin-bottom: 15px;
@@ -173,13 +290,30 @@ body {
     font-family: 'Cinzel', serif;
     font-size: 1rem;
     background: var(--accent-clr);
-    color: var(--mode-text); /* Mode-based color */
+    color: var(--mode-text); /* Corrected: Dark=White, Light=Black */
     border: none;
     border-radius: 8px;
     cursor: pointer;
     transition: var(--transition);
     width: 100%;
     font-weight: 700;
+    position: relative;
+    overflow: hidden;
+}
+
+.rpg-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255,255,255,0.2);
+    transition: left 0.3s ease;
+}
+
+.rpg-btn:hover::before {
+    left: 100%;
 }
 
 .rpg-btn:hover { transform: translateY(-2px); }
@@ -316,12 +450,16 @@ body {
     border: 1px solid var(--border-clr);
 }
 
-.rpg-search-box i { color: var(--mode-text); } /* Mode-based color */
+.rpg-search-box i { color: var(--mode-text); } /* Corrected: Dark=White, Light=Black */
 
 .rpg-search-box input {
-    background: transparent; border: none; color: var(--mode-text); /* Mode-based color */
+    background: transparent; border: none; color: var(--mode-text); /* Corrected: Dark=White, Light=Black */
     padding: 10px 5px; width: 100%; font-size: 0.85rem;
     outline: none !important;
+}
+
+.rpg-search-box input::placeholder {
+    color: var(--text-muted);
 }
 
 .rpg-filter-btn {
@@ -332,7 +470,7 @@ body {
     transition: var(--transition);
 }
 
-.rpg-filter-btn i { color: var(--mode-text); } /* Mode-based color */
+.rpg-filter-btn i { color: var(--mode-text); } /* Corrected: Dark=White, Light=Black */
 .rpg-filter-btn:hover { background: var(--accent-clr); }
 .rpg-filter-btn:hover i { color: var(--mode-text); }
 
@@ -356,7 +494,7 @@ body {
     transition: var(--transition);
 }
 
-.r-chip.active, .t-chip.active { background: var(--accent-clr); color: var(--mode-text); border-color: var(--accent-clr); }
+.r-chip.active, .t-chip.active { background: var(--accent-clr); color: var(--text-main); border-color: var(--accent-clr); }
 
 .rpg-btn-small {
     background: rgba(var(--accent-clr), 0.1);
@@ -394,7 +532,7 @@ body {
 .unit-rarity {
     position: absolute; top: 5px; right: 5px;
     background: var(--accent-clr);
-    color: var(--mode-text); /* Mode-based color */
+    color: var(--text-main); /* Rarity follows mode naturally */
     border: 1px solid var(--accent-clr);
     padding: 2px 6px; border-radius: 4px; font-size: 0.6rem; font-weight: 900;
 }
@@ -433,7 +571,7 @@ body {
 #detail-rarity-badge {
     position: absolute; bottom: 10px; right: 10px;
     width: 45px; height: 45px; background: var(--accent-clr);
-    color: var(--mode-text); border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    color: var(--text-main); border-radius: 50%; display: flex; align-items: center; justify-content: center;
     font-family: 'Orbitron', sans-serif; font-size: 1.3rem; font-weight: 900;
 }
 
@@ -451,18 +589,18 @@ body {
 }
 
 .rpg-box p {
-    color: var(--mode-text); /* Mode-based color */
+    color: var(--mode-text); /* Corrected: Dark=White, Light=Black */
 }
 
 .box-header {
     position: absolute; top: -8px; left: 15px;
-    background: var(--accent-clr); color: var(--mode-text);
+    background: var(--accent-clr); color: var(--text-main);
     padding: 1px 10px; font-size: 0.55rem; border-radius: 4px;
     font-family: 'Orbitron', sans-serif;
 }
 
 /* GALLERY CAROUSEL */
-.unit-gallery { margin-top: 5px; padding-bottom: 20px; } /* Reduced margin to be closer to lore */
+.unit-gallery { margin-top: 5px; padding-bottom: 20px; }
 .gallery-title { font-family: 'Orbitron', sans-serif; font-size: 0.7rem; color: var(--accent-clr); text-align: center; margin-bottom: 10px; letter-spacing: 2px; }
 .carousel { width: 100%; overflow: hidden; padding: 5px 0; }
 .carousel-track { display: flex; align-items: center; justify-content: center; gap: 15px; min-height: 110px; }
@@ -521,9 +659,10 @@ body {
     background: #000; z-index: 9999;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     transition: opacity 0.5s ease;
+    overflow: hidden;
 }
 
-.rpg-loader { text-align: center; width: 200px; }
+.rpg-loader { text-align: center; width: 200px; position: relative; z-index: 10; }
 
 .loader-circle {
     width: 60px; height: 60px; border: 4px solid rgba(255,255,255,0.1);
@@ -544,7 +683,45 @@ body {
 #loader-status { font-family: 'Orbitron', sans-serif; font-size: 0.6rem; color: var(--accent-clr); letter-spacing: 2px; margin-bottom: 5px; }
 #loader-percentage { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; font-weight: 700; color: #fff; }
 
+/* Loading Screen Particles */
+.loader-particles {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+}
+
+.loader-particles::before,
+.loader-particles::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(1px 1px at 20px 30px, rgba(255,255,255,0.5), transparent),
+        radial-gradient(1px 1px at 60px 70px, rgba(255,255,255,0.5), transparent),
+        radial-gradient(1px 1px at 50px 50px, rgba(255,255,255,0.5), transparent),
+        radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.5), transparent),
+        radial-gradient(1px 1px at 90px 10px, rgba(255,255,255,0.5), transparent);
+    background-repeat: repeat;
+    background-size: 200px 200px;
+    animation: particleFloat 15s linear infinite;
+    opacity: 0.3;
+}
+
+.loader-particles::after {
+    animation: particleFloat 20s linear infinite reverse;
+    opacity: 0.2;
+}
+
+/* ===== ANIMATIONS ===== */
 @keyframes spin { to { transform: rotate(360deg); } }
+@keyframes cornerPulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.6; } }
+@keyframes particleFloat { 0% { transform: translateY(0px); } 100% { transform: translateY(-100px); } }
+@keyframes ornamentGlow { 0%, 100% { opacity: 0.1; } 50% { opacity: 0.3; } }
+@keyframes titlePulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
 
 /* Desktop */
 @media (min-width: 768px) {
