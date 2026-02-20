@@ -28,8 +28,10 @@ const UI = {
             p.scrollTop = 0;
         });
         const target = document.getElementById(pageId);
-        target.classList.add('active');
-        window.scrollTo(0, 0);
+        if (target) {
+            target.classList.add('active');
+            window.scrollTo(0, 0);
+        }
     },
 
     updateClock() {
@@ -37,19 +39,21 @@ const UI = {
         const h = String(now.getHours()).padStart(2, '0');
         const m = String(now.getMinutes()).padStart(2, '0');
         const s = String(now.getSeconds()).padStart(2, '0');
-        this.clock.innerText = `${h}:${m}:${s}`;
+        if (this.clock) this.clock.innerText = `${h}:${m}:${s}`;
         
         const d = String(now.getDate()).padStart(2, '0');
         const mon = now.toLocaleString('default', { month: 'short' }).toUpperCase();
         const y = now.getFullYear();
-        this.date.innerText = `${d} ${mon} ${y}`;
+        if (this.date) this.date.innerText = `${d} ${mon} ${y}`;
     },
 
     toggleTheme() {
         const current = document.documentElement.getAttribute('data-theme');
         const next = current === 'dark' ? 'light' : 'dark';
         document.documentElement.setAttribute('data-theme', next);
-        this.themeToggle.innerHTML = next === 'dark' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+        if (this.themeToggle) {
+            this.themeToggle.innerHTML = next === 'dark' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+        }
     },
 
     handleCarousel(el) {
@@ -123,40 +127,61 @@ function getMockArchive() {
 
 // --- MAIN LOGIC ---
 async function init() {
-    // Show loading with progress animation
+    // Show loading with progress animation immediately
     showLoadingProgress();
+    
+    // Simulate data loading with progress
     await loadRealmData();
-    completeLoadingProgress();
 }
 
 function showLoadingProgress() {
-    const loader = document.querySelector('.rpg-loader');
-    if (!loader) return;
+    const loadingScreen = document.getElementById('loading-screen');
+    const progressBar = document.getElementById('loader-progress-bar');
+    const percentageText = document.getElementById('loader-percentage');
+    const loaderCircle = document.querySelector('.loader-circle');
+    
+    if (!loadingScreen) return;
+    
+    loadingScreen.classList.remove('hidden');
+    loadingScreen.style.opacity = '1';
     
     let progress = 0;
     const colors = ['#ff3e3e', '#00ff88', '#ffcc00', '#00d2ff', '#9d50bb'];
     let colorIndex = 0;
     
     const interval = setInterval(() => {
-        progress += Math.random() * 30;
-        if (progress > 100) progress = 100;
-        
-        const loaderCircle = document.querySelector('.loader-circle');
-        if (loaderCircle) {
-            loaderCircle.style.borderTopColor = colors[colorIndex % colors.length];
-            colorIndex++;
-        }
+        // Random increment for realistic feel
+        progress += Math.floor(Math.random() * 15) + 5;
         
         if (progress >= 100) {
+            progress = 100;
             clearInterval(interval);
+            setTimeout(() => completeLoadingProgress(), 500);
         }
-    }, 300);
+        
+        // Update UI
+        if (progressBar) progressBar.style.width = `${progress}%`;
+        if (percentageText) percentageText.innerText = `${progress}%`;
+        
+        // Change colors periodically
+        if (loaderCircle && progressBar) {
+            const currentColor = colors[colorIndex % colors.length];
+            loaderCircle.style.borderTopColor = currentColor;
+            progressBar.style.backgroundColor = currentColor;
+            colorIndex++;
+        }
+    }, 200);
 }
 
 function completeLoadingProgress() {
     UI.loading.style.opacity = '0';
-    setTimeout(() => UI.loading.classList.add('hidden'), 500);
-    
+    setTimeout(() => {
+        UI.loading.classList.add('hidden');
+        setupPagePersistence();
+    }, 500);
+}
+
+function setupPagePersistence() {
     // Restore page state from sessionStorage
     const savedPage = sessionStorage.getItem('currentPage');
     const savedCategory = sessionStorage.getItem('currentCategory');
@@ -170,17 +195,27 @@ function completeLoadingProgress() {
             renderArchive();
         }
         UI.showPage(savedPage);
+    } else {
+        UI.showPage('page-1');
     }
 
+    // Attach all event listeners after page is ready
+    attachEventListeners();
+}
+
+function attachEventListeners() {
     // Page 1
-    document.getElementById('start-btn').onclick = () => {
-        document.getElementById('start-btn').classList.add('hidden');
-        document.getElementById('patch-btn').classList.add('hidden');
-        const verText = document.querySelector('.patch-ver-text');
-        if (verText) verText.classList.add('hidden');
-        document.getElementById('category-grid').classList.remove('hidden');
-        sessionStorage.setItem('currentPage', 'page-1');
-    };
+    const startBtn = document.getElementById('start-btn');
+    if (startBtn) {
+        startBtn.onclick = () => {
+            startBtn.classList.add('hidden');
+            document.getElementById('patch-btn').classList.add('hidden');
+            const verText = document.querySelector('.patch-ver-text');
+            if (verText) verText.classList.add('hidden');
+            document.getElementById('category-grid').classList.remove('hidden');
+            sessionStorage.setItem('currentPage', 'page-1');
+        };
+    }
 
     // CANCEL CAT BTN
     const cancelBtn = document.getElementById('cancel-cat-btn');
@@ -195,18 +230,21 @@ function completeLoadingProgress() {
         };
     }
 
-    document.getElementById('patch-btn').onclick = () => {
-        document.getElementById('patch-text').innerHTML = `
-            <strong>UPDATE v1.0.8</strong><br><br>
-            - Improved UI transitions and animations.<br>
-            - Fixed sticky navigation for Archive and Detail.<br>
-            - Optimized slider stability (no more vibration).<br>
-            - Theme-consistent button colors across all modals.<br>
-            - Dynamic Lore box auto-adjustment.<br><br>
-            <em>System fully optimized.</em>
-        `;
-        UI.patchModal.classList.remove('hidden');
-    };
+    const patchBtn = document.getElementById('patch-btn');
+    if (patchBtn) {
+        patchBtn.onclick = () => {
+            document.getElementById('patch-text').innerHTML = `
+                <strong>UPDATE v1.0.8</strong><br><br>
+                - Improved UI transitions and animations.<br>
+                - Fixed sticky navigation for Archive and Detail.<br>
+                - Optimized slider stability (no more vibration).<br>
+                - Theme-consistent button colors across all modals.<br>
+                - Dynamic Lore box auto-adjustment.<br><br>
+                <em>System fully optimized.</em>
+            `;
+            UI.patchModal.classList.remove('hidden');
+        };
+    }
 
     document.querySelectorAll('.cat-card').forEach(card => {
         card.onclick = () => selectRealm(card.dataset.category);
@@ -224,20 +262,28 @@ function completeLoadingProgress() {
     });
     
     // Page 2
-    document.getElementById('filter-btn').onclick = () => document.getElementById('filter-panel').classList.toggle('hidden');
-    document.getElementById('quick-change-btn').onclick = () => {
-        const modalList = document.getElementById('mini-cat-list');
-        modalList.innerHTML = CONFIG.categories
-            .filter(c => c !== currentCat)
-            .map(c => `<div class="m-cat" onclick="selectRealm('${c}')">${c}</div>`)
-            .join('');
-        UI.modal.classList.remove('hidden');
-    };
+    const filterBtn = document.getElementById('filter-btn');
+    if (filterBtn) filterBtn.onclick = () => document.getElementById('filter-panel').classList.toggle('hidden');
+    
+    const quickChangeBtn = document.getElementById('quick-change-btn');
+    if (quickChangeBtn) {
+        quickChangeBtn.onclick = () => {
+            const modalList = document.getElementById('mini-cat-list');
+            modalList.innerHTML = CONFIG.categories
+                .filter(c => c !== currentCat)
+                .map(c => `<div class="m-cat" onclick="selectRealm('${c}')">${c}</div>`)
+                .join('');
+            UI.modal.classList.remove('hidden');
+        };
+    }
 
-    document.getElementById('unit-search').oninput = (e) => {
-        filters.search = e.target.value.toLowerCase();
-        renderArchive();
-    };
+    const unitSearch = document.getElementById('unit-search');
+    if (unitSearch) {
+        unitSearch.oninput = (e) => {
+            filters.search = e.target.value.toLowerCase();
+            renderArchive();
+        };
+    }
 
     document.querySelectorAll('.r-chip').forEach(chip => {
         chip.onclick = () => {
@@ -248,20 +294,23 @@ function completeLoadingProgress() {
             }
             renderArchive();
         };
-    });
+    } );
 
-    document.getElementById('reset-filters').onclick = () => {
-        filters = { search: '', rarity: '', tags: [] };
-        document.getElementById('unit-search').value = '';
-        document.querySelectorAll('.r-chip, .t-chip').forEach(c => c.classList.remove('active'));
-        renderArchive();
-    };
+    const resetFilters = document.getElementById('reset-filters');
+    if (resetFilters) {
+        resetFilters.onclick = () => {
+            filters = { search: '', rarity: '', tags: [] };
+            document.getElementById('unit-search').value = '';
+            document.querySelectorAll('.r-chip, .t-chip').forEach(c => c.classList.remove('active'));
+            renderArchive();
+        };
+    }
 
     // Close Modals
-    document.getElementById('close-modal').onclick = () => UI.modal.classList.add('hidden');
-    document.getElementById('close-patch').onclick = () => UI.patchModal.classList.add('hidden');
-    document.querySelector('.close-viewer').onclick = () => UI.viewer.classList.add('hidden');
-    UI.themeToggle.onclick = () => UI.toggleTheme();
+    if (document.getElementById('close-modal')) document.getElementById('close-modal').onclick = () => UI.modal.classList.add('hidden');
+    if (document.getElementById('close-patch')) document.getElementById('close-patch').onclick = () => UI.patchModal.classList.add('hidden');
+    if (document.querySelector('.close-viewer')) document.querySelector('.close-viewer').onclick = () => UI.viewer.classList.add('hidden');
+    if (UI.themeToggle) UI.themeToggle.onclick = () => UI.toggleTheme();
     
     setInterval(() => UI.updateClock(), 1000);
     UI.updateClock();
@@ -273,7 +322,8 @@ function selectRealm(cat) {
     document.getElementById('category-title').innerText = cat.toUpperCase();
     UI.modal.classList.add('hidden');
     filters = { search: '', rarity: '', tags: [] };
-    document.getElementById('unit-search').value = '';
+    const unitSearch = document.getElementById('unit-search');
+    if (unitSearch) unitSearch.value = '';
     document.querySelectorAll('.r-chip').forEach(c => c.classList.remove('active'));
     populateTags();
     renderArchive();
@@ -288,6 +338,7 @@ function populateTags() {
         if (u.tags) u.tags.split(',').forEach(t => tags.add(t.trim()));
     });
     const container = document.getElementById('dynamic-tags');
+    if (!container) return;
     container.innerHTML = '';
     tags.forEach(tag => {
         const span = document.createElement('span');
@@ -309,6 +360,7 @@ function populateTags() {
 
 function renderArchive() {
     const grid = document.getElementById('unit-grid');
+    if (!grid) return;
     const filtered = rawData.filter(u => {
         const matchCat = u.category === currentCat;
         const matchSearch = u.name.toLowerCase().includes(filters.search);
@@ -336,12 +388,14 @@ function showLegendDetail(name) {
     document.getElementById('detail-nickname').innerText = unit.nickname ? `"${unit.nickname}"` : "";
     document.getElementById('detail-story').innerText = unit.story;
     const tagContainer = document.getElementById('detail-tags-container');
-    tagContainer.innerHTML = unit.tags ? unit.tags.split(',').map(t => `<span class="tag" onclick="jumpToTag('${t.trim()}')">${t.trim()}</span>`).join('') : '';
+    if (tagContainer) tagContainer.innerHTML = unit.tags ? unit.tags.split(',').map(t => `<span class="tag" onclick="jumpToTag('${t.trim()}')">${t.trim()}</span>`).join('') : '';
     const track = document.getElementById('carousel-track');
-    const images = [unit.extra_image_1, unit.extra_image_2, unit.extra_image_3].filter(img => img);
-    track.innerHTML = images.map((img, i) => `
-        <img class="extra-img ${i === 1 ? 'active' : ''}" src="${img}" onclick="UI.handleCarousel(this)">
-    `).join('');
+    if (track) {
+        const images = [unit.extra_image_1, unit.extra_image_2, unit.extra_image_3].filter(img => img);
+        track.innerHTML = images.map((img, i) => `
+            <img class="extra-img ${i === 1 ? 'active' : ''}" src="${img}" onclick="UI.handleCarousel(this)">
+        `).join('');
+    }
     sessionStorage.setItem('currentPage', 'page-3');
     sessionStorage.setItem('currentCategory', currentCat);
     UI.showPage('page-3');
@@ -351,7 +405,8 @@ function jumpToTag(tag) {
     sessionStorage.setItem('currentPage', 'page-2');
     sessionStorage.setItem('currentCategory', currentCat);
     UI.showPage('page-2');
-    document.getElementById('filter-panel').classList.remove('hidden');
+    const filterPanel = document.getElementById('filter-panel');
+    if (filterPanel) filterPanel.classList.remove('hidden');
     filters.tags = [tag];
     renderArchive();
     document.querySelectorAll('.t-chip').forEach(c => {
@@ -360,4 +415,5 @@ function jumpToTag(tag) {
     });
 }
 
+// Start the application
 init();
